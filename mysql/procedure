@@ -1,0 +1,35 @@
+#Conteneurisation d'une base de donnée mysql
+ #telecharger l'image Mysql
+ docker pull mysql
+ 
+ #creer un conteneur Mysql
+ docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=mon_mot_de_passe -d mysql
+
+ #verifier le conteneur
+ docker ps
+ 
+ #pour se connecter à la base de donnée il faut:
+ docker exec -it mysql-container mysql -uroot -p
+
+
+
+#Conteneurisation de phpMyAdmin
+ #telecharge l'image: 
+ docker pull phpmyadmin
+ #creer un conteneur phpMyAdmin
+ docker run --name phpmyadmin-container -d --link mysql-container:db -p 8080:80 -e PMA_HOST=db -e PMA_USER=root -e PMA_PASSWORD=<MOT_DE_PASSE> phpmyadmin/phpmyadmin
+ #acceder a phpMyAdmin : 
+ http://localhost:8080
+---------------------------------------------------------------------------
+Pour utiliser le DockerFile il faut
+1.Contruire l'image à partir du Dockerfile:
+docker build -t mysql-phpmyadmin .
+2. creer et executer le conteneur MySQL:
+docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=mon_mot_de_passe -d mysql-phpmyadmin
+3.Verifier que le conteneur Mysql est en cours d'execution
+docker ps
+4.Créer et exécuter le conteneur phpMyAdmin en liant au conteneur MySQL :
+docker run --name phpmyadmin-container -d --link mysql-container:db -p 8080:80 -e PMA_HOST=db -e PMA_USER=root -e PMA_PASSWORD=mon_mot_de_passe mysql-phpmyadmin
+5. Acceder à phpMyAdmin via le navigateur via le lien : http://localhost:8080
+----------------------------------------------------------------------------
+
